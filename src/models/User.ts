@@ -17,6 +17,15 @@ export const userSchema = new Schema({
         throw new Error('Invalid email');
       }
     }
+  },
+  age: {
+    type: Number,
+    default: 0,
+    validate(value: number) {
+      if (value < 0) {
+        throw new Error('Age must be nonnegative');
+      }
+    }
   }
 });
 
