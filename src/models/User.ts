@@ -18,6 +18,10 @@ export const userSchema = new Schema({
       }
     }
   },
+  password: {
+    type: String,
+    required: true
+  },
   age: {
     type: Number,
     default: 0,
