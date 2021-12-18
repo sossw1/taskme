@@ -4,11 +4,14 @@ import validator from 'validator';
 export const userSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
   email: {
     type: String,
     required: true,
+    trim: true,
+    lowercase: true,
     validate(value: string) {
       if (!validator.isEmail(value)) {
         throw new Error('Invalid email');
