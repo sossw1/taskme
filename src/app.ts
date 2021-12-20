@@ -1,5 +1,6 @@
 import mongooseConnect from './db/mongoose';
 import taskRoutes from './routes/api/tasks';
+import userRoutes from './routes/api/users';
 import express from 'express';
 import chalk from 'chalk';
 
@@ -10,6 +11,7 @@ app.use(express.json());
 
 mongooseConnect();
 
+userRoutes(app);
 taskRoutes(app);
 
 app.listen(PORT, () => {
