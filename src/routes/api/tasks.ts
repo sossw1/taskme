@@ -16,10 +16,11 @@ export default (app: Express) => {
       .then(() => {
         console.log('Task created:');
         console.log(taskDocument);
-        res.send(taskDocument);
+        res.status(201).send(taskDocument);
       })
       .catch((error) => {
         console.log(error.message);
+        res.send();
       });
   });
 };
