@@ -14,8 +14,7 @@ export default (app: Express) => {
     taskDocument
       .save()
       .then(() => {
-        console.log('Task created:');
-        console.log(taskDocument);
+        console.log('Task created: ' + taskDocument);
         res.status(201).send(taskDocument);
       })
       .catch((error) => {
