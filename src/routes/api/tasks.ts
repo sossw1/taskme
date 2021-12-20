@@ -1,16 +1,22 @@
 import TaskCollection from '../../models/Task';
-import { Express } from 'express';
+import { Express, Request, Response } from 'express';
+
+interface Task {
+  description: string;
+  completed: boolean;
+}
 
 export default (app: Express) => {
-  app.post('/api/v1/tasks', (req, res) => {
+  app.post('/api/v1/tasks', (req: Request, res: Response) => {
     const { description, completed } = req.body;
-    const newTask = new TaskCollection({ description, completed });
-    newTask
+    const task: Task = { description, completed };
+    const taskDocument = new TaskCollection(task);
+    taskDocument
       .save()
       .then(() => {
         console.log('Task created:');
-        console.log(newTask);
-        res.send(newTask);
+        console.log(taskDocument);
+        res.send(taskDocument);
       })
       .catch((error) => {
         console.log(error.message);
