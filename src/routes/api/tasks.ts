@@ -3,11 +3,8 @@ import { Express } from 'express';
 
 export default (app: Express) => {
   app.post('/api/v1/tasks', (req, res) => {
-    const newTask = new TaskCollection({
-      description: req.body.description,
-      completed: req.body.completed
-    });
-
+    const { description, completed } = req.body;
+    const newTask = new TaskCollection({ description, completed });
     newTask
       .save()
       .then(() => {
