@@ -7,6 +7,16 @@ interface Task {
 }
 
 export default (app: Express) => {
+  app.get('/api/v1/tasks', (req: Request, res: Response) => {
+    TaskCollection.find({})
+      .then((tasks) => {
+        res.send(tasks);
+      })
+      .catch((error) => {
+        res.status(500).send();
+      });
+  });
+
   app.post('/api/v1/tasks', (req: Request, res: Response) => {
     const { description, completed } = req.body;
     const task: Task = { description, completed };
