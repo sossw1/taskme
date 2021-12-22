@@ -9,6 +9,16 @@ interface User {
 }
 
 export default (app: Express) => {
+  app.get('/api/v1/users', (req: Request, res: Response) => {
+    UserCollection.find({})
+      .then((users) => {
+        res.send(users);
+      })
+      .catch((error) => {
+        res.status(500).send(error.message);
+      });
+  });
+
   app.post('/api/v1/users', (req: Request, res: Response) => {
     const { name, email, password, age } = req.body;
     const user: User = { name, email, password, age };
