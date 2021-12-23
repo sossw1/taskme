@@ -7,14 +7,13 @@ interface Task {
 }
 
 export default (app: Express) => {
-  app.get('/api/v1/tasks', (req: Request, res: Response) => {
-    TaskCollection.find({})
-      .then((tasks) => {
-        res.send(tasks);
-      })
-      .catch((error) => {
-        res.status(500).send();
-      });
+  app.get('/api/v1/tasks', async (req: Request, res: Response) => {
+    try {
+      const task = await TaskCollection.find({});
+      res.send(task);
+    } catch (error) {
+      res.status(500).send();
+    }
   });
 
   app.get('/api/v1/tasks/:id', (req: Request, res: Response) => {
