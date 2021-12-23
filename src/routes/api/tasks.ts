@@ -16,17 +16,16 @@ export default (app: Express) => {
     }
   });
 
-  app.get('/api/v1/tasks/:id', (req: Request, res: Response) => {
-    TaskCollection.findById(req.params.id)
-      .then((task) => {
-        res.send(task);
-      })
-      .catch((error) => {
-        if (error.name === 'CastError') {
-          return res.status(404).send();
-        }
-        res.status(500).send();
-      });
+  app.get('/api/v1/tasks/:id', async (req: Request, res: Response) => {
+    try {
+      const task = await TaskCollection.findById(req.params.id);
+      res.send(task);
+    } catch (error: any) {
+      if (error.name === 'CastError') {
+        return res.status(404).send();
+      }
+      res.status(500).send();
+    }
   });
 
   app.post('/api/v1/tasks', async (req: Request, res: Response) => {
