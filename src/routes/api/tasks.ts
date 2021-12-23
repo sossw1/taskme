@@ -30,19 +30,15 @@ export default (app: Express) => {
       });
   });
 
-  app.post('/api/v1/tasks', (req: Request, res: Response) => {
+  app.post('/api/v1/tasks', async (req: Request, res: Response) => {
     const { description, completed } = req.body;
     const task: Task = { description, completed };
     const taskDocument = new TaskCollection(task);
-    taskDocument
-      .save()
-      .then(() => {
-        console.log('Task created: ' + taskDocument);
-        res.status(201).send(taskDocument);
-      })
-      .catch((error) => {
-        console.log(error.message);
-        res.status(400).send(error.message);
-      });
+    try {
+      await taskDocument.save();
+      res.status(201).send(taskDocument);
+    } catch (error) {
+      res.status(400).send(error);
+    }
   });
 };
