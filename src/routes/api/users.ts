@@ -41,4 +41,23 @@ export default (app: Express) => {
       res.status(400).send(error);
     }
   });
+
+  app.patch('/api/v1/users/:id', async (req: Request, res: Response) => {
+    try {
+      const user = await UserCollection.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {
+          new: true,
+          runValidators: true
+        }
+      );
+      res.send(user);
+    } catch (error: any) {
+      if (error.name === 'CastError') {
+        return res.status(404).send(error);
+      }
+      res.status(400).send(error);
+    }
+  });
 };
