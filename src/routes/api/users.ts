@@ -14,19 +14,24 @@ export default (app: Express) => {
       const users = await UserCollection.find({});
       res.send(users);
     } catch (error) {
-      res.status(500).send();
+      res.sendStatus(500);
     }
   });
 
   app.get('/api/v1/users/:id', async (req: Request, res: Response) => {
     try {
       const user = await UserCollection.findById(req.params.id);
+      if (!user) {
+        return res
+          .status(404)
+          .send({ error: 'Not Found - Unable to find user with provided ID' });
+      }
       res.send(user);
     } catch (error: any) {
       if (error.name === 'CastError') {
-        return res.status(404).send();
+        return res.status(400).send({ error: 'Bad Request - Invalid user ID' });
       }
-      res.status(500).send();
+      res.sendStatus(500);
     }
   });
 
@@ -52,12 +57,19 @@ export default (app: Express) => {
           runValidators: true
         }
       );
+
+      if (!user) {
+        return res
+          .status(404)
+          .send({ error: 'Not Found - Unable to find user with provided ID' });
+      }
+
       res.send(user);
     } catch (error: any) {
       if (error.name === 'CastError') {
-        return res.status(404).send();
+        return res.status(404).send({ error: 'Invalid user ID' });
       }
-      res.status(400).send(error);
+      res.sendStatus(400);
     }
   });
 
@@ -65,15 +77,17 @@ export default (app: Express) => {
     try {
       const user = await UserCollection.findByIdAndDelete(req.params.id);
       if (!user) {
-        return res.status(404).send();
+        return res
+          .status(404)
+          .send({ error: 'Not Found - Unable to find user with provided ID' });
       }
       res.send(user);
     } catch (error: any) {
       if (error.name === 'CastError') {
-        return res.status(404).send();
+        return res.status(400).send({ error: 'Bad Request - Invalid user ID' });
       }
 
-      res.status(400).send();
+      res.sendStatus(500);
     }
   });
 };
