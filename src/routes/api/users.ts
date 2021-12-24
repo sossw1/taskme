@@ -55,7 +55,7 @@ export default (app: Express) => {
       res.send(user);
     } catch (error: any) {
       if (error.name === 'CastError') {
-        return res.status(404).send(error);
+        return res.status(404).send();
       }
       res.status(400).send(error);
     }
