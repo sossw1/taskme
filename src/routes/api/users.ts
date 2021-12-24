@@ -36,7 +36,7 @@ export default (app: Express) => {
     const userDocument = new UserCollection(user);
     try {
       await userDocument.save();
-      res.status(201).send(user);
+      res.status(201).send(userDocument);
     } catch (error) {
       res.status(400).send(error);
     }
