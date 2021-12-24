@@ -60,4 +60,20 @@ export default (app: Express) => {
       res.status(400).send(error);
     }
   });
+
+  app.delete('/api/v1/users/:id', async (req: Request, res: Response) => {
+    try {
+      const user = await UserCollection.findByIdAndDelete(req.params.id);
+      if (!user) {
+        return res.status(404).send();
+      }
+      res.send(user);
+    } catch (error: any) {
+      if (error.name === 'CastError') {
+        return res.status(404).send();
+      }
+
+      res.status(400).send();
+    }
+  });
 };
