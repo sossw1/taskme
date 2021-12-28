@@ -12,7 +12,7 @@ export default (app: Express) => {
       const tasks = await TaskCollection.find({});
       res.send(tasks);
     } catch (error) {
-      res.status(500).send();
+      res.sendStatus(500);
     }
   });
 
@@ -22,9 +22,9 @@ export default (app: Express) => {
       res.send(task);
     } catch (error: any) {
       if (error.name === 'CastError') {
-        return res.status(404).send();
+        return res.sendStatus(400);
       }
-      res.status(500).send();
+      res.sendStatus(500);
     }
   });
 
@@ -36,7 +36,7 @@ export default (app: Express) => {
       await taskDocument.save();
       res.status(201).send(taskDocument);
     } catch (error) {
-      res.status(400).send(error);
+      res.sendStatus(400);
     }
   });
 
@@ -54,10 +54,10 @@ export default (app: Express) => {
       res.send(task);
     } catch (error: any) {
       if (error.name === 'CastError') {
-        return res.status(404).send();
+        return res.sendStatus(400);
       }
 
-      res.status(400).send(error);
+      res.sendStatus(400);
     }
   });
 };
