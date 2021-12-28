@@ -22,12 +22,12 @@ export default (app: Express) => {
       if (!task) {
         return res
           .status(404)
-          .send({ error: 'Not Found - Unable to find task with provided ID' });
+          .send({ error: 'Unable to find task with provided ID' });
       }
       res.send(task);
     } catch (error: any) {
       if (error.name === 'CastError') {
-        return res.status(400).send({ error: 'Bad Request - Invalid task ID' });
+        return res.status(400).send({ error: 'Invalid task ID' });
       }
       res.sendStatus(500);
     }
@@ -64,7 +64,7 @@ export default (app: Express) => {
       if (!task) {
         return res
           .status(404)
-          .send({ error: 'Not Found - Unable to find task with provided ID' });
+          .send({ error: 'Unable to find task with provided ID' });
       }
 
       res.send(task);

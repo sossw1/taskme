@@ -24,12 +24,12 @@ export default (app: Express) => {
       if (!user) {
         return res
           .status(404)
-          .send({ error: 'Not Found - Unable to find user with provided ID' });
+          .send({ error: 'Unable to find user with provided ID' });
       }
       res.send(user);
     } catch (error: any) {
       if (error.name === 'CastError') {
-        return res.status(400).send({ error: 'Bad Request - Invalid user ID' });
+        return res.status(400).send({ error: 'Invalid user ID' });
       }
       res.sendStatus(500);
     }
@@ -80,7 +80,7 @@ export default (app: Express) => {
       if (!user) {
         return res
           .status(404)
-          .send({ error: 'Not Found - Unable to find user with provided ID' });
+          .send({ error: 'Unable to find user with provided ID' });
       }
 
       res.send(user);
@@ -117,12 +117,12 @@ export default (app: Express) => {
       if (!user) {
         return res
           .status(404)
-          .send({ error: 'Not Found - Unable to find user with provided ID' });
+          .send({ error: 'Unable to find user with provided ID' });
       }
       res.send(user);
     } catch (error: any) {
       if (error.name === 'CastError') {
-        return res.status(400).send({ error: 'Bad Request - Invalid user ID' });
+        return res.status(400).send({ error: 'Invalid user ID' });
       }
 
       res.sendStatus(500);
