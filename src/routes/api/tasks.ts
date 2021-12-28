@@ -19,6 +19,9 @@ export default (app: Express) => {
   app.get('/api/v1/tasks/:id', async (req: Request, res: Response) => {
     try {
       const task = await TaskCollection.findById(req.params.id);
+      if (!task) {
+        return res.sendStatus(404);
+      }
       res.send(task);
     } catch (error: any) {
       if (error.name === 'CastError') {
@@ -50,6 +53,10 @@ export default (app: Express) => {
           runValidators: true
         }
       );
+
+      if (!task) {
+        return res.sendStatus(404);
+      }
 
       res.send(task);
     } catch (error: any) {
