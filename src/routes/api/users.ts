@@ -88,7 +88,26 @@ export default (app: Express) => {
       if (error.name === 'CastError') {
         return res.status(404).send({ error: 'Invalid user ID' });
       }
-      res.sendStatus(400);
+      if (error.name === 'ValidationError') {
+        let errorMessage = 'Invalid user data provided - ';
+        const { errors } = error;
+
+        if (errors.name) {
+          errorMessage += errors.name.message;
+        } else if (errors.email) {
+          errorMessage += errors.email.message;
+        } else if (errors.password) {
+          errorMessage += errors.password.message;
+        } else if (errors.age) {
+          errorMessage += errors.age.message;
+        } else {
+          errorMessage = errorMessage.slice(0, -3);
+        }
+
+        return res.status(400).send({ error: errorMessage });
+      }
+
+      res.sendStatus(500);
     }
   });
 
