@@ -86,7 +86,7 @@ export default (app: Express) => {
       res.send(user);
     } catch (error: any) {
       if (error.name === 'CastError') {
-        return res.status(404).send({ error: 'Invalid user ID' });
+        return res.status(400).send({ error: 'Invalid user ID' });
       }
       if (error.name === 'ValidationError') {
         let errorMessage = 'Invalid user data provided - ';
