@@ -9,8 +9,8 @@ interface Task {
 export default (app: Express) => {
   app.get('/api/v1/tasks', async (req: Request, res: Response) => {
     try {
-      const task = await TaskCollection.find({});
-      res.send(task);
+      const tasks = await TaskCollection.find({});
+      res.send(tasks);
     } catch (error) {
       res.status(500).send();
     }
