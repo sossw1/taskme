@@ -40,8 +40,13 @@ export default (app: Express) => {
     try {
       await taskDocument.save();
       res.status(201).send(taskDocument);
-    } catch (error) {
-      res.sendStatus(400);
+    } catch (error: any) {
+      if (error.name === 'ValidationError') {
+        const errorMessage = `Invalid task data provided - ${error.errors.description.message}`;
+        return res.status(400).send({ error: errorMessage });
+      }
+
+      res.sendStatus(500);
     }
   });
 
