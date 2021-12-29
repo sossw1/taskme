@@ -69,13 +69,12 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
 
 router.patch('/api/v1/users/:id', async (req: Request, res: Response) => {
   try {
-    const user = await UserCollection.findByIdAndUpdate(
-      req.params.id,
+    // Using findOneAndUpdate instead of findByIdAndUpdate method due to
+    // pre & post hooks not being executed for findByIdAndUpdate
+    const user = await UserCollection.findOneAndUpdate(
+      { _id: req.params.id },
       req.body,
-      {
-        new: true,
-        runValidators: true
-      }
+      { new: true, runValidators: true }
     );
 
     if (!user) {
