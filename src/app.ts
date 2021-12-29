@@ -1,18 +1,20 @@
 import mongooseConnect from './db/mongoose';
-import taskRoutes from './routes/api/tasks';
-import userRoutes from './routes/api/users';
+import taskRouter from './routes/api/tasks';
+import userRouter from './routes/api/users';
 import express from 'express';
 import chalk from 'chalk';
 
 const app = express();
+const router = express.Router();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-mongooseConnect();
+router.use(userRouter);
+router.use(taskRouter);
+app.use(router);
 
-userRoutes(app);
-taskRoutes(app);
+mongooseConnect();
 
 app.listen(PORT, () => {
   console.log('Server running on PORT ' + chalk.yellow(PORT));
