@@ -33,5 +33,9 @@ export const userSchema = new Schema({
   }
 });
 
+userSchema.pre('save', async function (next) {
+  next();
+});
+
 const UserCollection: Model<Document> = mongoose.model('User', userSchema);
 export default UserCollection;
