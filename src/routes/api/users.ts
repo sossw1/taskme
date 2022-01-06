@@ -1,6 +1,5 @@
 import UserCollection from '../../models/User';
 import express, { Request, Response } from 'express';
-import { Document } from 'mongoose';
 
 interface User {
   name: string;
