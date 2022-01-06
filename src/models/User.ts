@@ -1,8 +1,35 @@
-import mongoose, { Schema, Model, Document } from 'mongoose';
+import {
+  Document,
+  model,
+  Model,
+  Schema,
+  Error,
+  SchemaDefinitionProperty
+} from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 
-export const userSchema = new Schema({
+export interface IUser {
+  name: string;
+  email: string;
+  password: string;
+  age: number;
+}
+
+export interface IUserDoc extends IUser, Document {}
+
+enum PropertyNames {
+  NAME = 'name',
+  EMAIL = 'email',
+  PASSWORD = 'password',
+  AGE = 'age'
+}
+
+export interface IUserModel extends Model<IUserDoc> {
+  findByCredentials(email: string, password: string): Promise<IUserDoc>;
+}
+
+const UserSchemaFields: Record<keyof IUser, SchemaDefinitionProperty> = {
   name: {
     type: String,
     required: true,
@@ -32,9 +59,11 @@ export const userSchema = new Schema({
       }
     }
   }
-});
+};
 
-userSchema.pre('save', async function (next) {
+const UserSchema = new Schema(UserSchemaFields);
+
+UserSchema.pre('save', async function (next) {
   const user = this;
 
   if (user.isModified('password')) {
@@ -44,5 +73,10 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-const UserCollection: Model<Document> = mongoose.model('User', userSchema);
+const UserCollection = model<IUserDoc, IUserModel>(
+  'users',
+  UserSchema,
+  'users'
+);
+
 export default UserCollection;
