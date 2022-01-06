@@ -83,10 +83,8 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
 
 router.post('/api/v1/users/login', async (req: Request, res: Response) => {
   try {
-    const user: User = await UserCollection.findByCredentials(
-      req.body.email,
-      req.body.password
-    );
+    const { email, password }: { email: string; password: string } = req.body;
+    const user: User = await UserCollection.findByCredentials(email, password);
 
     res.send(user);
   } catch (error) {
