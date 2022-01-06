@@ -37,7 +37,17 @@ router.get('/api/v1/users/:id', async (req: Request, res: Response) => {
 });
 
 router.post('/api/v1/users', async (req: Request, res: Response) => {
-  const { name, email, password, age } = req.body;
+  const {
+    name,
+    email,
+    password,
+    age
+  }: {
+    name: string;
+    email: string;
+    password: string;
+    age: number;
+  } = req.body;
   const user: User = { name, email, password, age };
   const userDocument = new UserCollection(user);
   try {
