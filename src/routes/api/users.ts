@@ -68,6 +68,19 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
   }
 });
 
+router.post('/api/v1/users/login', async (req: Request, res: Response) => {
+  try {
+    const user: User = await UserCollection.findByCredentials(
+      req.body.email,
+      req.body.password
+    );
+
+    res.send(user);
+  } catch (error) {
+    res.sendStatus(400);
+  }
+});
+
 router.patch('/api/v1/users/:id', async (req: Request, res: Response) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ['name', 'email', 'password', 'age'];
