@@ -64,6 +64,10 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
       return res.status(400).send({ error: errorMessage });
     }
 
+    if (error.code === 11000) {
+      return res.status(400).send({ error: 'Email must be unique' });
+    }
+
     res.sendStatus(500);
   }
 });
