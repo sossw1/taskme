@@ -1,4 +1,4 @@
-import UserCollection, { IUser, IUserDoc } from '../../models/User';
+import UserCollection, { IUser } from '../../models/User';
 import express, { Request, Response } from 'express';
 
 const router = express.Router();
