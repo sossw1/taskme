@@ -15,6 +15,7 @@ export interface IUser {
   email: string;
   password: string;
   age: number;
+  tokens: string[];
 }
 
 export interface IUserDoc extends IUser, Document {
@@ -63,7 +64,15 @@ const UserSchemaFields: Record<keyof IUser, SchemaDefinitionProperty> = {
         throw new Error('Age must be nonnegative');
       }
     }
-  }
+  },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true
+      }
+    }
+  ]
 };
 
 const UserSchema = new Schema(UserSchemaFields);

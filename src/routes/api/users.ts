@@ -34,14 +34,16 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
     name,
     email,
     password,
-    age
+    age,
+    tokens
   }: {
     name: string;
     email: string;
     password: string;
     age: number;
+    tokens: string[];
   } = req.body;
-  const user: IUser = { name, email, password, age };
+  const user: IUser = { name, email, password, age, tokens };
   const userDocument = new UserCollection(user);
   try {
     await userDocument.save();
@@ -59,6 +61,8 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
         errorMessage += errors.password.message;
       } else if (errors.age) {
         errorMessage += errors.age.message;
+      } else if (errors.tokens) {
+        errorMessage += errors.tokens.message;
       } else {
         errorMessage = errorMessage.slice(0, -3);
       }
@@ -89,7 +93,7 @@ router.post('/api/v1/users/login', async (req: Request, res: Response) => {
 
 router.patch('/api/v1/users/:id', async (req: Request, res: Response) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ['name', 'email', 'password', 'age'];
+  const allowedUpdates = ['name', 'email', 'password', 'age', 'tokens'];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );
@@ -127,6 +131,8 @@ router.patch('/api/v1/users/:id', async (req: Request, res: Response) => {
           errorMessage += errors.password.message;
         } else if (errors.age) {
           errorMessage += errors.age.message;
+        } else if (errors.tokens) {
+          errorMessage += errors.tokens.message;
         } else {
           errorMessage = errorMessage.slice(0, -3);
         }
