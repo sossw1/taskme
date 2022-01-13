@@ -8,6 +8,7 @@ import {
 } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
+import jwt, { Jwt } from 'jsonwebtoken';
 
 export interface IUser {
   name: string;
@@ -16,7 +17,9 @@ export interface IUser {
   age: number;
 }
 
-export interface IUserDoc extends IUser, Document {}
+export interface IUserDoc extends IUser, Document {
+  generateAuthToken(): Jwt;
+}
 
 enum PropertyNames {
   NAME = 'name',
@@ -63,6 +66,13 @@ const UserSchemaFields: Record<keyof IUser, SchemaDefinitionProperty> = {
 };
 
 const UserSchema = new Schema(UserSchemaFields);
+
+UserSchema.methods.generateAuthToken = async function () {
+  const user = this;
+  const secret: string = process.env.JWT_SECRET || 'd^e#f@a*u$l%t';
+  const token = jwt.sign({ _id: user._id.toString() }, secret);
+  return token;
+};
 
 UserSchema.static(
   'findByCredentials',
