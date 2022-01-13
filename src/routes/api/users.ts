@@ -1,12 +1,5 @@
-import UserCollection from '../../models/User';
+import UserCollection, { IUser, IUserDoc } from '../../models/User';
 import express, { Request, Response } from 'express';
-
-interface User {
-  name: string;
-  email: string;
-  password: string;
-  age: number;
-}
 
 const router = express.Router();
 
@@ -48,7 +41,7 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
     password: string;
     age: number;
   } = req.body;
-  const user: User = { name, email, password, age };
+  const user: IUser = { name, email, password, age };
   const userDocument = new UserCollection(user);
   try {
     await userDocument.save();
@@ -84,7 +77,7 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
 router.post('/api/v1/users/login', async (req: Request, res: Response) => {
   try {
     const { email, password }: { email: string; password: string } = req.body;
-    const user: User = await UserCollection.findByCredentials(email, password);
+    const user = await UserCollection.findByCredentials(email, password);
 
     res.send(user);
   } catch (error) {
