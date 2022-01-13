@@ -30,6 +30,7 @@ enum PropertyNames {
 
 export interface IUserModel extends Model<IUserDoc> {
   findByCredentials(email: string, password: string): Promise<IUserDoc>;
+  PropertyNames: typeof PropertyNames;
 }
 
 const UserSchemaFields: Record<keyof IUser, SchemaDefinitionProperty> = {
