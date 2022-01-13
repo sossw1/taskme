@@ -79,7 +79,9 @@ router.post('/api/v1/users/login', async (req: Request, res: Response) => {
     const { email, password }: { email: string; password: string } = req.body;
     const user = await UserCollection.findByCredentials(email, password);
 
-    res.send(user);
+    const token = await user.generateAuthToken();
+
+    res.send({ user, token });
   } catch (error) {
     res.sendStatus(400);
   }
