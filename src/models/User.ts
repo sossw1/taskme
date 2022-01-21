@@ -10,12 +10,16 @@ import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import jwt, { Jwt } from 'jsonwebtoken';
 
+export interface IToken extends Document {
+  token: string;
+}
+
 export interface IUser {
   name: string;
   email: string;
   password: string;
   age: number;
-  tokens: string[];
+  tokens: IToken[];
 }
 
 export interface IUserDoc extends IUser, Document {
