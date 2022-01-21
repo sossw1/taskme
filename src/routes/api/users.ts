@@ -94,7 +94,6 @@ router.post(
   async (req: Request, res: Response) => {
     try {
       req.user.tokens = req.user.tokens.filter((token) => {
-        console.log(token);
         return token.token !== req.token;
       });
       await req.user.save();
