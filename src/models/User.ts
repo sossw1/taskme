@@ -22,8 +22,15 @@ export interface IUser {
   tokens: IToken[];
 }
 
+export interface IPublicProfile {
+  name: string;
+  email: string;
+  age: string;
+}
+
 export interface IUserDoc extends IUser, Document {
   generateAuthToken(): Jwt;
+  getPublicProfile(): IPublicProfile;
 }
 
 enum PropertyNames {
@@ -88,6 +95,14 @@ UserSchema.methods.generateAuthToken = async function () {
   user.tokens = user.tokens.concat({ token });
   await user.save();
   return token;
+};
+
+UserSchema.methods.getPublicProfile = function () {
+  const user: IUserDoc = this;
+  const userObject = user.toObject();
+  const { name, email, age } = userObject;
+  const userProfile = { name, email, age };
+  return userProfile;
 };
 
 UserSchema.static(
