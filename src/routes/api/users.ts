@@ -156,15 +156,10 @@ router.patch('/api/v1/users/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/api/v1/users/:id', async (req: Request, res: Response) => {
+router.delete('/api/v1/users/me', auth, async (req: Request, res: Response) => {
   try {
-    const user = await UserCollection.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res
-        .status(404)
-        .send({ error: 'Unable to find user with provided ID' });
-    }
-    res.send(user);
+    await req.user.remove();
+    res.send(req.user);
   } catch (error: any) {
     if (error.name === 'CastError') {
       return res.status(400).send({ error: 'Invalid user ID' });
