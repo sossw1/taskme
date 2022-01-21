@@ -3,15 +3,6 @@ import express, { Request, Response } from 'express';
 
 const router = express.Router();
 
-router.get('/api/v1/users', async (req: Request, res: Response) => {
-  try {
-    const users = await UserCollection.find({});
-    res.send(users);
-  } catch (error) {
-    res.sendStatus(500);
-  }
-});
-
 router.get('/api/v1/users/:id', async (req: Request, res: Response) => {
   try {
     const user = await UserCollection.findById(req.params.id);
