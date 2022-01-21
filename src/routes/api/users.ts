@@ -105,6 +105,20 @@ router.post(
   }
 );
 
+router.post(
+  '/api/v1/users/logout/all',
+  auth,
+  async (req: Request, res: Response) => {
+    try {
+      req.user.tokens = [];
+      await req.user.save();
+      res.sendStatus(200);
+    } catch (error) {
+      res.sendStatus(500);
+    }
+  }
+);
+
 router.patch('/api/v1/users/:id', async (req: Request, res: Response) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ['name', 'email', 'password', 'age', 'tokens'];
