@@ -1,4 +1,4 @@
-import UserCollection, { IUser } from '../../models/User';
+import UserCollection, { IUser, IToken } from '../../models/User';
 import express, { Request, Response } from 'express';
 import auth from '../../middleware/auth';
 
@@ -37,7 +37,7 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
     email: string;
     password: string;
     age: number;
-    tokens: string[];
+    tokens: IToken[];
   } = req.body;
   const user: IUser = { name, email, password, age, tokens };
   const userDocument = new UserCollection(user);
@@ -87,6 +87,24 @@ router.post('/api/v1/users/login', async (req: Request, res: Response) => {
     res.sendStatus(400);
   }
 });
+
+router.post(
+  '/api/v1/users/logout',
+  auth,
+  async (req: Request, res: Response) => {
+    try {
+      req.user.tokens = req.user.tokens.filter((token) => {
+        console.log(token);
+        return token.token !== req.token;
+      });
+      await req.user.save();
+
+      res.sendStatus(200);
+    } catch (error) {
+      res.sendStatus(500);
+    }
+  }
+);
 
 router.patch('/api/v1/users/:id', async (req: Request, res: Response) => {
   const updates = Object.keys(req.body);
