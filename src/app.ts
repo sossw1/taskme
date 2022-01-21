@@ -3,6 +3,15 @@ import taskRouter from './routes/api/tasks';
 import userRouter from './routes/api/users';
 import express from 'express';
 import chalk from 'chalk';
+import { IUserDoc } from './models/User';
+
+declare global {
+  namespace Express {
+    interface Request {
+      user: IUserDoc;
+    }
+  }
+}
 
 const app = express();
 const router = express.Router();
