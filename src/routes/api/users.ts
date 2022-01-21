@@ -1,7 +1,12 @@
 import UserCollection, { IUser } from '../../models/User';
 import express, { Request, Response } from 'express';
+import auth from '../../middleware/auth';
 
 const router = express.Router();
+
+router.get('/api/v1/users/me', auth, async (req: Request, res: Response) => {
+  res.send(req.user);
+});
 
 router.get('/api/v1/users/:id', async (req: Request, res: Response) => {
   try {
