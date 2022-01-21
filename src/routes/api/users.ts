@@ -8,23 +8,6 @@ router.get('/api/v1/users/me', auth, async (req: Request, res: Response) => {
   res.send(req.user);
 });
 
-router.get('/api/v1/users/:id', async (req: Request, res: Response) => {
-  try {
-    const user = await UserCollection.findById(req.params.id);
-    if (!user) {
-      return res
-        .status(404)
-        .send({ error: 'Unable to find user with provided ID' });
-    }
-    res.send(user);
-  } catch (error: any) {
-    if (error.name === 'CastError') {
-      return res.status(400).send({ error: 'Invalid user ID' });
-    }
-    res.sendStatus(500);
-  }
-});
-
 router.post('/api/v1/users', async (req: Request, res: Response) => {
   const {
     name,
