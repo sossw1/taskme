@@ -27,7 +27,7 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
   try {
     await userDocument.save();
     const token = await userDocument.generateAuthToken();
-    res.status(201).send({ userDocument, token });
+    res.status(201).send({ user: userDocument, token });
   } catch (error: any) {
     if (error.name === 'ValidationError') {
       let errorMessage = 'Invalid user data provided - ';
