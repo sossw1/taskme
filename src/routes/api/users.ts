@@ -108,14 +108,14 @@ router.patch('/api/v1/users/me', auth, async (req: Request, res: Response) => {
 
     const { name, email, password, age } = req.body;
 
-    if (name) {
+    if (name || name === '') {
       user.name = name;
     }
 
-    if (email) {
+    if (email || email === '') {
       user.email = email;
     }
-    if (password) {
+    if (password || password === '') {
       user.password = password;
     }
     if (age) {
