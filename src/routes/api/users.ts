@@ -102,57 +102,54 @@ router.post(
   }
 );
 
-router.patch('/api/v1/users/:id', async (req: Request, res: Response) => {
-  const updates = Object.keys(req.body);
-  const allowedUpdates = ['name', 'email', 'password', 'age', 'tokens'];
-  const isValidOperation = updates.every((update) =>
-    allowedUpdates.includes(update)
-  );
+router.patch('/api/v1/users/me', auth, async (req: Request, res: Response) => {
+  try {
+    const user: any = req.user;
 
-  if (!isValidOperation) {
-    return res.status(400).send({ error: 'Invalid updates' });
-  } else {
-    try {
-      const user: any = await UserCollection.findById(req.params.id);
+    const { name, email, password, age } = req.body;
 
-      if (user) {
-        updates.forEach((update) => (user[update] = req.body[update]));
-
-        await user.save();
-
-        res.send(user);
-      } else {
-        return res
-          .status(404)
-          .send({ error: 'Unable to find user with provided ID' });
-      }
-    } catch (error: any) {
-      if (error.name === 'CastError') {
-        return res.status(400).send({ error: 'Invalid user ID' });
-      }
-      if (error.name === 'ValidationError') {
-        let errorMessage = 'Invalid user data provided - ';
-        const { errors } = error;
-
-        if (errors.name) {
-          errorMessage += errors.name.message;
-        } else if (errors.email) {
-          errorMessage += errors.email.message;
-        } else if (errors.password) {
-          errorMessage += errors.password.message;
-        } else if (errors.age) {
-          errorMessage += errors.age.message;
-        } else if (errors.tokens) {
-          errorMessage += errors.tokens.message;
-        } else {
-          errorMessage = errorMessage.slice(0, -3);
-        }
-
-        return res.status(400).send({ error: errorMessage });
-      }
-
-      res.sendStatus(500);
+    if (name) {
+      user.name = name;
     }
+
+    if (email) {
+      user.email = email;
+    }
+    if (password) {
+      user.password = password;
+    }
+    if (age) {
+      user.age = age;
+    }
+
+    await user.save();
+
+    res.send(user);
+  } catch (error: any) {
+    if (error.name === 'CastError') {
+      return res.status(400).send({ error: 'Invalid user ID' });
+    }
+    if (error.name === 'ValidationError') {
+      let errorMessage = 'Invalid user data provided - ';
+      const { errors } = error;
+
+      if (errors.name) {
+        errorMessage += errors.name.message;
+      } else if (errors.email) {
+        errorMessage += errors.email.message;
+      } else if (errors.password) {
+        errorMessage += errors.password.message;
+      } else if (errors.age) {
+        errorMessage += errors.age.message;
+      } else if (errors.tokens) {
+        errorMessage += errors.tokens.message;
+      } else {
+        errorMessage = errorMessage.slice(0, -3);
+      }
+
+      return res.status(400).send({ error: errorMessage });
+    }
+    res.sendStatus(500);
   }
 });
 
