@@ -104,7 +104,7 @@ router.post(
 
 router.patch('/api/v1/users/me', auth, async (req: Request, res: Response) => {
   try {
-    const user: any = req.user;
+    const user = req.user;
 
     const { name, email, password, age } = req.body;
 
