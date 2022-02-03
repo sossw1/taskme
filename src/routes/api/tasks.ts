@@ -1,9 +1,11 @@
 import TaskCollection from '../../models/Task';
 import express, { Request, Response } from 'express';
+import auth from '../../middleware/auth';
 
 interface Task {
   description: string;
   completed: boolean;
+  owner: string;
 }
 
 const router = express.Router();
@@ -34,9 +36,10 @@ router.get('/api/v1/tasks/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/api/v1/tasks', async (req: Request, res: Response) => {
+router.post('/api/v1/tasks', auth, async (req: Request, res: Response) => {
   const { description, completed } = req.body;
-  const task: Task = { description, completed };
+  const owner = req.user._id;
+  const task: Task = { description, completed, owner };
   const taskDocument = new TaskCollection(task);
   try {
     await taskDocument.save();
