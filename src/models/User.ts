@@ -81,6 +81,12 @@ const UserSchemaFields: Record<keyof IUser, SchemaDefinitionProperty> = {
 
 const UserSchema = new Schema(UserSchemaFields);
 
+UserSchema.virtual('tasks', {
+  ref: 'tasks',
+  localField: '_id',
+  foreignField: 'owner'
+});
+
 UserSchema.methods.generateAuthToken = async function () {
   const user = this;
   const secret: string = process.env.JWT_SECRET || 'd^e#f@a*u$l%t';

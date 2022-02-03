@@ -12,8 +12,9 @@ const router = express.Router();
 
 router.get('/api/v1/tasks', auth, async (req: Request, res: Response) => {
   try {
-    const tasks = await TaskCollection.find({ owner: req.user._id });
-    res.send(tasks);
+    const user: any = req.user;
+    await user.populate('tasks');
+    res.send(user.tasks);
   } catch (error) {
     res.sendStatus(500);
   }
