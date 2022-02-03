@@ -10,9 +10,9 @@ interface Task {
 
 const router = express.Router();
 
-router.get('/api/v1/tasks', async (req: Request, res: Response) => {
+router.get('/api/v1/tasks', auth, async (req: Request, res: Response) => {
   try {
-    const tasks = await TaskCollection.find({});
+    const tasks = await TaskCollection.find({ owner: req.user._id });
     res.send(tasks);
   } catch (error) {
     res.sendStatus(500);
