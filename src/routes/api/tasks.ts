@@ -19,9 +19,13 @@ router.get('/api/v1/tasks', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/api/v1/tasks/:id', async (req: Request, res: Response) => {
+router.get('/api/v1/tasks/:id', auth, async (req: Request, res: Response) => {
   try {
-    const task = await TaskCollection.findById(req.params.id);
+    const task = await TaskCollection.findOne({
+      _id: req.params.id,
+      owner: req.user._id
+    });
+
     if (!task) {
       return res
         .status(404)
