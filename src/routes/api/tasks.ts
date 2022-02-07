@@ -59,7 +59,7 @@ router.post('/api/v1/tasks', auth, async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/api/v1/tasks/:id', async (req: Request, res: Response) => {
+router.patch('/api/v1/tasks/:id', auth, async (req: Request, res: Response) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ['description', 'completed'];
   const isValidOperation = updates.every((update) =>
@@ -70,7 +70,10 @@ router.patch('/api/v1/tasks/:id', async (req: Request, res: Response) => {
     return res.status(400).send({ error: 'Invalid updates' });
   } else {
     try {
-      const task: any = await TaskCollection.findById(req.params.id);
+      const task: any = await TaskCollection.findOne({
+        _id: req.params.id,
+        owner: req.user._id
+      });
 
       if (task) {
         updates.forEach((update) => (task[update] = req.body[update]));
