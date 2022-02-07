@@ -9,6 +9,7 @@ import {
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import jwt, { Jwt } from 'jsonwebtoken';
+import TaskCollection from './Task';
 
 export interface IToken extends Document {
   token: string;
@@ -133,6 +134,12 @@ UserSchema.pre('save', async function (next) {
     user.password = await bcrypt.hash(user.password, 8);
   }
 
+  next();
+});
+
+UserSchema.pre('remove', async function (next) {
+  const user = this;
+  await TaskCollection.deleteMany({ owner: user._id });
   next();
 });
 
