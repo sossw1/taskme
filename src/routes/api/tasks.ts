@@ -111,7 +111,7 @@ router.delete(
       if (!task) {
         return res
           .status(404)
-          .send({ error: 'Unable to find user with provided ID' });
+          .send({ error: 'Unable to find task with provided ID' });
       }
       res.send(task);
     } catch (error: any) {
