@@ -42,7 +42,9 @@ export const TaskSchemaFields: Record<keyof ITask, SchemaDefinitionProperty> = {
   }
 };
 
-const TaskSchema = new Schema(TaskSchemaFields);
+const TaskSchema = new Schema(TaskSchemaFields, {
+  timestamps: true
+});
 
 const TaskCollection = model<ITaskDoc, ITaskModel>(
   'tasks',
