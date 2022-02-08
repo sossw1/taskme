@@ -11,9 +11,18 @@ interface Task {
 const router = express.Router();
 
 router.get('/api/v1/tasks', auth, async (req: Request, res: Response) => {
+  const match: any = {};
+
+  if (req.query.completed) {
+    match.completed = req.query.completed === 'true';
+  }
+
   try {
     const user: any = req.user;
-    await user.populate('tasks');
+    await user.populate({
+      path: 'tasks',
+      match
+    });
     res.send(user.tasks);
   } catch (error) {
     res.sendStatus(500);
