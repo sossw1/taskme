@@ -1,6 +1,7 @@
 import UserCollection, { IUser, IToken } from '../../models/User';
 import express, { Request, Response } from 'express';
 import auth from '../../middleware/auth';
+import multer from 'multer';
 
 const router = express.Router();
 
@@ -99,6 +100,18 @@ router.post(
     } catch (error) {
       res.sendStatus(500);
     }
+  }
+);
+
+const upload = multer({
+  dest: 'avatars'
+});
+
+router.post(
+  '/api/v1/users/me/avatar',
+  upload.single('avatar'),
+  (req: Request, res: Response) => {
+    res.send();
   }
 );
 
