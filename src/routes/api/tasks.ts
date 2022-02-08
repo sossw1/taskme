@@ -36,12 +36,22 @@ router.get('/api/v1/tasks', auth, async (req: Request, res: Response) => {
       }
     }
 
+    let sort: any = {};
+    const querySort = req.query.sort;
+    if (querySort) {
+      if (typeof querySort === 'string') {
+        const sortParams = querySort.split(':');
+        sort[sortParams[0]] = sortParams[1] === 'desc' ? -1 : 1;
+      }
+    }
+
     await user.populate({
       path: 'tasks',
       match,
       options: {
         limit,
-        skip
+        skip,
+        sort
       }
     });
     res.send(user.tasks);
