@@ -19,9 +19,21 @@ router.get('/api/v1/tasks', auth, async (req: Request, res: Response) => {
 
   try {
     const user: any = req.user;
+
+    let limit;
+    const queryLimit = req.query.limit;
+    if (queryLimit) {
+      if (typeof queryLimit === 'string') {
+        limit = parseInt(queryLimit);
+      }
+    }
+
     await user.populate({
       path: 'tasks',
-      match
+      match,
+      options: {
+        limit
+      }
     });
     res.send(user.tasks);
   } catch (error) {
