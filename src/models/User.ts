@@ -80,7 +80,9 @@ const UserSchemaFields: Record<keyof IUser, SchemaDefinitionProperty> = {
   ]
 };
 
-const UserSchema = new Schema(UserSchemaFields);
+const UserSchema = new Schema(UserSchemaFields, {
+  timestamps: true
+});
 
 UserSchema.virtual('tasks', {
   ref: 'tasks',
