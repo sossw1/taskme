@@ -28,11 +28,20 @@ router.get('/api/v1/tasks', auth, async (req: Request, res: Response) => {
       }
     }
 
+    let skip;
+    const querySkip = req.query.skip;
+    if (querySkip) {
+      if (typeof querySkip === 'string') {
+        skip = parseInt(querySkip);
+      }
+    }
+
     await user.populate({
       path: 'tasks',
       match,
       options: {
-        limit
+        limit,
+        skip
       }
     });
     res.send(user.tasks);
