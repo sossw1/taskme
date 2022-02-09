@@ -104,7 +104,10 @@ router.post(
 );
 
 const upload = multer({
-  dest: 'avatars'
+  dest: 'avatars',
+  limits: {
+    fileSize: 1000000
+  }
 });
 
 router.post(
