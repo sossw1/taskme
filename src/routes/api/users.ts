@@ -1,5 +1,5 @@
 import UserCollection, { IUser, IToken } from '../../models/User';
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, response, Response } from 'express';
 import auth from '../../middleware/auth';
 import multer from 'multer';
 
@@ -122,6 +122,9 @@ router.post(
   upload.single('avatar'),
   (req: Request, res: Response) => {
     res.send();
+  },
+  (error: any, req: Request, res: Response, next: NextFunction) => {
+    res.status(400).send({ error: error.message });
   }
 );
 
