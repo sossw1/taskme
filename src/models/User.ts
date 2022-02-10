@@ -21,7 +21,7 @@ export interface IUser {
   password: string;
   age: number;
   tokens: IToken[];
-  avatar: Buffer;
+  avatar: Buffer | undefined;
 }
 
 export interface IUserDoc extends IUser, Document {

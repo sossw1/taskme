@@ -199,4 +199,18 @@ router.delete('/api/v1/users/me', auth, async (req: Request, res: Response) => {
   }
 });
 
+router.delete(
+  '/api/v1/users/me/avatar',
+  auth,
+  async (req: Request, res: Response) => {
+    try {
+      req.user.avatar = undefined;
+      await req.user.save();
+      res.sendStatus(200);
+    } catch (error) {
+      res.sendStatus(500);
+    }
+  }
+);
+
 export default router;
