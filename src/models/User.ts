@@ -21,6 +21,7 @@ export interface IUser {
   password: string;
   age: number;
   tokens: IToken[];
+  avatar: Buffer;
 }
 
 export interface IUserDoc extends IUser, Document {
@@ -31,7 +32,9 @@ enum PropertyNames {
   NAME = 'name',
   EMAIL = 'email',
   PASSWORD = 'password',
-  AGE = 'age'
+  AGE = 'age',
+  TOKENS = 'tokens',
+  AVATAR = 'avatar'
 }
 
 export interface IUserModel extends Model<IUserDoc> {
@@ -77,7 +80,10 @@ const UserSchemaFields: Record<keyof IUser, SchemaDefinitionProperty> = {
         required: true
       }
     }
-  ]
+  ],
+  avatar: {
+    type: Buffer
+  }
 };
 
 const UserSchema = new Schema(UserSchemaFields, {

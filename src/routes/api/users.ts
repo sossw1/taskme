@@ -15,15 +15,17 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
     email,
     password,
     age,
-    tokens
+    tokens,
+    avatar
   }: {
     name: string;
     email: string;
     password: string;
     age: number;
     tokens: IToken[];
+    avatar: Buffer;
   } = req.body;
-  const user: IUser = { name, email, password, age, tokens };
+  const user: IUser = { name, email, password, age, tokens, avatar };
   const userDocument = new UserCollection(user);
   try {
     await userDocument.save();
@@ -44,6 +46,8 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
         errorMessage += errors.age.message;
       } else if (errors.tokens) {
         errorMessage += errors.tokens.message;
+      } else if (errors.avatar) {
+        errorMessage += errors.avatar.message;
       } else {
         errorMessage = errorMessage.slice(0, -3);
       }
@@ -119,6 +123,7 @@ const upload = multer({
 
 router.post(
   '/api/v1/users/me/avatar',
+  auth,
   upload.single('avatar'),
   (req: Request, res: Response) => {
     res.send();
@@ -167,8 +172,6 @@ router.patch('/api/v1/users/me', auth, async (req: Request, res: Response) => {
         errorMessage += errors.password.message;
       } else if (errors.age) {
         errorMessage += errors.age.message;
-      } else if (errors.tokens) {
-        errorMessage += errors.tokens.message;
       } else {
         errorMessage = errorMessage.slice(0, -3);
       }
