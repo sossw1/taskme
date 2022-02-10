@@ -108,7 +108,6 @@ router.post(
 );
 
 const upload = multer({
-  dest: 'avatars',
   limits: {
     fileSize: 1000000
   },
@@ -125,7 +124,12 @@ router.post(
   '/api/v1/users/me/avatar',
   auth,
   upload.single('avatar'),
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
+    const buffer = req.file?.buffer;
+    if (buffer) {
+      req.user.avatar = buffer;
+    }
+    await req.user.save();
     res.send();
   },
   (error: any, req: Request, res: Response, next: NextFunction) => {
