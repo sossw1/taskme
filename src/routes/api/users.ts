@@ -2,6 +2,7 @@ import UserCollection, { IUser, IToken } from '../../models/User';
 import express, { NextFunction, Request, response, Response } from 'express';
 import auth from '../../middleware/auth';
 import multer from 'multer';
+import sharp from 'sharp';
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ router.get('/api/v1/users/:id/avatar', async (req: Request, res: Response) => {
       throw new Error();
     }
 
-    res.header('Content-Type', 'image/jpg');
+    res.header('Content-Type', 'image/png');
     res.send(user.avatar);
   } catch (error) {
     res.sendStatus(404);
@@ -140,11 +141,16 @@ router.post(
   auth,
   upload.single('avatar'),
   async (req: Request, res: Response) => {
-    const buffer = req.file?.buffer;
+    const buffer = await sharp(req.file?.buffer)
+      .resize({ width: 250, height: 250 })
+      .png()
+      .toBuffer();
+
     if (buffer) {
       req.user.avatar = buffer;
+      await req.user.save();
     }
-    await req.user.save();
+
     res.send();
   },
   (error: any, req: Request, res: Response, next: NextFunction) => {
