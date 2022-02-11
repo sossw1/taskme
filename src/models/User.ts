@@ -107,10 +107,13 @@ UserSchema.methods.generateAuthToken = async function () {
 
 UserSchema.methods.toJSON = function () {
   const user: IUserDoc = this;
-  const userObject = user.toObject();
-  const { name, email, age } = userObject;
-  const userProfile = { name, email, age };
-  return userProfile;
+  const userObject: any = user.toObject();
+
+  delete userObject.password;
+  delete userObject.tokens;
+  delete userObject.avatar;
+
+  return userObject;
 };
 
 UserSchema.static(
