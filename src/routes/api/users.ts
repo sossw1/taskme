@@ -9,6 +9,21 @@ router.get('/api/v1/users/me', auth, async (req: Request, res: Response) => {
   res.send(req.user);
 });
 
+router.get('/api/v1/users/:id/avatar', async (req: Request, res: Response) => {
+  try {
+    const user = await UserCollection.findById(req.params.id);
+
+    if (!user || !user.avatar) {
+      throw new Error();
+    }
+
+    res.header('Content-Type', 'image/jpg');
+    res.send(user.avatar);
+  } catch (error) {
+    res.sendStatus(404);
+  }
+});
+
 router.post('/api/v1/users', async (req: Request, res: Response) => {
   const {
     name,
