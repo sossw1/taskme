@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import mongooseConnect from './db/mongoose';
 import taskRouter from './routes/api/tasks';
 import userRouter from './routes/api/users';
