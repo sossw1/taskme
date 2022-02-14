@@ -1,6 +1,6 @@
 import UserCollection, { IUser, IToken } from '../../models/User';
 import auth from '../../middleware/auth';
-import { sendWelcomeEmail } from '../../emails/account';
+import { sendWelcomeEmail, sendCancellationEmail } from '../../emails/account';
 
 import express, { NextFunction, Request, response, Response } from 'express';
 import multer from 'multer';
@@ -213,6 +213,7 @@ router.patch('/api/v1/users/me', auth, async (req: Request, res: Response) => {
 router.delete('/api/v1/users/me', auth, async (req: Request, res: Response) => {
   try {
     await req.user.remove();
+    sendCancellationEmail(req.user.name, req.user.email);
     res.send(req.user);
   } catch (error: any) {
     if (error.name === 'CastError') {
