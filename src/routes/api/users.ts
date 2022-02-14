@@ -1,6 +1,8 @@
 import UserCollection, { IUser, IToken } from '../../models/User';
-import express, { NextFunction, Request, response, Response } from 'express';
 import auth from '../../middleware/auth';
+import { sendWelcomeEmail } from '../../emails/account';
+
+import express, { NextFunction, Request, response, Response } from 'express';
 import multer from 'multer';
 import sharp from 'sharp';
 
@@ -46,6 +48,7 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
   try {
     await userDocument.save();
     const token = await userDocument.generateAuthToken();
+    sendWelcomeEmail(user.name, user.email);
     res.status(201).send({ user: userDocument, token });
   } catch (error: any) {
     if (error.name === 'ValidationError') {
