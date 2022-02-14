@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 import chalk from 'chalk';
 
-const mongoURL = 'mongodb://127.0.0.1:27017/taskme-api';
+const mongoURL =
+  process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/taskme-api';
 
 export default () => {
   mongoose
