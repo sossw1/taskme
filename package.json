@@ -14,7 +14,7 @@
     "start": "node build/app.js",
     "dev": "nodemon build/app.js",
     "postinstall": "tsc",
-    "deploy": "git push heroku master"
+    "deploy": "git push heroku main"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.6.1",
