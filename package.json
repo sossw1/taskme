@@ -11,6 +11,7 @@
   "main": "build/app.js",
   "scripts": {
     "test": "jest",
+    "test-watch": "jest --watch",
     "start": "node build/app.js",
     "dev": "nodemon build/app.js",
     "postinstall": "tsc",
