@@ -16,6 +16,9 @@
     "postinstall": "tsc",
     "deploy": "git push heroku main"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "dependencies": {
     "@sendgrid/mail": "^7.6.1",
     "@types/bcryptjs": "^2.4.2",
