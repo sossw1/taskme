@@ -10,9 +10,9 @@
   "license": "MIT",
   "main": "build/app.js",
   "scripts": {
-    "test": "env-cmd ./config/test.env jest --watch",
+    "test": "env-cmd -f ./config/test.env jest",
     "start": "node build/app.js",
-    "dev": "env-cmd ./config/dev.env nodemon build/app.js",
+    "dev": "env-cmd -f ./config/dev.env nodemon build/app.js",
     "postinstall": "tsc",
     "deploy": "git push heroku main"
   },
