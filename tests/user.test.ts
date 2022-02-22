@@ -30,3 +30,13 @@ test('Should sign up a new user', async () => {
     })
     .expect(201);
 });
+
+test('Should log in existing user', async () => {
+  await request(app)
+    .post('/api/v1/users/login')
+    .send({
+      email: testUser1.email,
+      password: testUser1.password
+    })
+    .expect(200);
+});
