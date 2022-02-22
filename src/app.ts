@@ -3,7 +3,6 @@ import userRouter from './routes/api/users';
 import { IUserDoc } from './models/User';
 
 import express from 'express';
-import chalk from 'chalk';
 
 declare global {
   namespace Express {
