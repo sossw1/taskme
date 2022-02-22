@@ -1,9 +1,10 @@
-import mongooseConnect from './db/mongoose';
+import './db/mongoose';
 import taskRouter from './routes/api/tasks';
 import userRouter from './routes/api/users';
+import { IUserDoc } from './models/User';
+
 import express from 'express';
 import chalk from 'chalk';
-import { IUserDoc } from './models/User';
 
 declare global {
   namespace Express {
@@ -23,8 +24,6 @@ app.use(express.json());
 router.use(userRouter);
 router.use(taskRouter);
 app.use(router);
-
-mongooseConnect();
 
 app.listen(PORT, () => {
   console.log('Server running on PORT ' + chalk.yellow(PORT));
