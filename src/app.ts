@@ -1,4 +1,3 @@
-import './db/mongoose';
 import taskRouter from './routes/api/tasks';
 import userRouter from './routes/api/users';
 import { IUserDoc } from './models/User';
@@ -17,7 +16,6 @@ declare global {
 
 const app = express();
 const router = express.Router();
-const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -25,6 +23,4 @@ router.use(userRouter);
 router.use(taskRouter);
 app.use(router);
 
-app.listen(PORT, () => {
-  console.log('Server running on PORT ' + chalk.yellow(PORT));
-});
+export default app;

@@ -8,11 +8,11 @@
     "url": "https://github.com/sossw1/taskme"
   },
   "license": "MIT",
-  "main": "build/app.js",
+  "main": "build/index.js",
   "scripts": {
     "test": "env-cmd -f ./config/test.env jest",
-    "start": "node build/app.js",
-    "dev": "env-cmd -f ./config/dev.env nodemon build/app.js",
+    "start": "node build/index.js",
+    "dev": "env-cmd -f ./config/dev.env nodemon build/index.js",
     "postinstall": "tsc",
     "deploy": "git push heroku main"
   },
