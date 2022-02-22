@@ -5,11 +5,13 @@ const mongoURL =
   (process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/taskme-api') +
   '?retryWrites=true&w=majority';
 
-mongoose
-  .connect(mongoURL)
-  .then(() => {
+const mongooseConnect = async () => {
+  try {
+    await mongoose.connect(mongoURL);
     console.log('MongoDB ' + chalk.green('connected'));
-  })
-  .catch((error) => {
+  } catch (error: any) {
     chalk.red(error.message);
-  });
+  }
+};
+
+mongooseConnect();
