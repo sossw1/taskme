@@ -1,5 +1,6 @@
 import app from '../src/app';
 
+import mongoose from 'mongoose';
 import request from 'supertest';
 import UserCollection from '../src/models/User';
 
@@ -12,6 +13,11 @@ const testUser1 = new UserCollection({
 beforeEach(async () => {
   await UserCollection.deleteMany();
   await new UserCollection(testUser1).save();
+});
+
+afterAll(async () => {
+  await mongoose.connection.db.dropDatabase();
+  await mongoose.connection.close();
 });
 
 test('Should sign up a new user', async () => {
