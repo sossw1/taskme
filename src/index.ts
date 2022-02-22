@@ -1,4 +1,3 @@
-import './db/mongoose';
 import app from './app';
 
 import chalk from 'chalk';

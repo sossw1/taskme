@@ -1,3 +1,4 @@
+import './db/mongoose';
 import taskRouter from './routes/api/tasks';
 import userRouter from './routes/api/users';
 import { IUserDoc } from './models/User';
