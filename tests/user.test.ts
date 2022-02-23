@@ -62,3 +62,11 @@ test('Should not log in nonexistent user', async () => {
     })
     .expect(400);
 });
+
+test('Should get profile for user', async () => {
+  await request(app)
+    .get('/api/v1/users/me')
+    .set('Authorization', `Bearer ${testUser1.tokens[0].token}`)
+    .send()
+    .expect(200);
+});
