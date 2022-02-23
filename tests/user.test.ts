@@ -55,6 +55,8 @@ test('Should sign up a new user', async () => {
       },
       token: user.tokens[0].token
     });
+
+    expect(user.password).not.toBe(testUser2.password);
   }
 });
 
