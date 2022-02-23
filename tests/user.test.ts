@@ -33,14 +33,29 @@ afterAll(async () => {
 });
 
 test('Should sign up a new user', async () => {
-  await request(app)
+  const testUser2 = {
+    name: 'Test Name 2',
+    email: 'testemail2@example.com',
+    password: 'testpassword123'
+  };
+
+  const response = await request(app)
     .post('/api/v1/users')
-    .send({
-      name: 'Test Name 2',
-      email: 'testemail2@example.com',
-      password: 'testpassword123'
-    })
+    .send(testUser2)
     .expect(201);
+
+  const user = await UserCollection.findById(response.body.user._id);
+  expect(user).not.toBeNull();
+
+  if (user) {
+    expect(response.body).toMatchObject({
+      user: {
+        name: testUser2.name,
+        email: testUser2.email
+      },
+      token: user.tokens[0].token
+    });
+  }
 });
 
 test('Should log in existing user', async () => {
