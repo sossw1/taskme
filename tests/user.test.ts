@@ -61,13 +61,19 @@ test('Should sign up a new user', async () => {
 });
 
 test('Should log in existing user', async () => {
-  await request(app)
+  const response = await request(app)
     .post('/api/v1/users/login')
     .send({
       email: testUser1.email,
       password: testUser1.password
     })
     .expect(200);
+
+  const user = await UserCollection.findById(testUser1._id);
+  expect(user).not.toBeNull();
+  if (user) {
+    expect(user.tokens[1].token).toBe(response.body.token);
+  }
 });
 
 test('Should not log in nonexistent user', async () => {
