@@ -1,14 +1,26 @@
 import app from '../src/app';
-
-import mongoose from 'mongoose';
-import request from 'supertest';
 import UserCollection from '../src/models/User';
 
-const testUser1 = new UserCollection({
+import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
+import request from 'supertest';
+
+const testUser1Id = new mongoose.Types.ObjectId();
+
+const testUser1 = {
+  _id: testUser1Id,
   name: 'Test Name',
   email: 'testemail@example.com',
-  password: 'testpassword123'
-});
+  password: 'testpassword123',
+  tokens: [
+    {
+      token: jwt.sign(
+        { _id: testUser1Id },
+        process.env.JWT_SECRET || 'd^e#f@a*u$l%t'
+      )
+    }
+  ]
+};
 
 beforeEach(async () => {
   await UserCollection.deleteMany();
