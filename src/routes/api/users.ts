@@ -165,6 +165,16 @@ router.patch('/api/v1/users/me', auth, async (req: Request, res: Response) => {
   try {
     const user = req.user;
 
+    const updates = Object.keys(req.body);
+    const allowedUpdates = ['name', 'email', 'password', 'age'];
+    const isValidOperation = updates.every((update) =>
+      allowedUpdates.includes(update)
+    );
+
+    if (!isValidOperation) {
+      return res.status(400).send({ error: 'Invalid updates' });
+    }
+
     const { name, email, password, age } = req.body;
 
     if (name || name === '') {
