@@ -1,35 +1,15 @@
 import app from '../src/app';
 import UserCollection from '../src/models/User';
+import { testUser1, dbSeed, dbClose } from './fixtures/db';
 
-import jwt from 'jsonwebtoken';
-import mongoose from 'mongoose';
 import request from 'supertest';
 
-const testUser1Id = new mongoose.Types.ObjectId();
-
-const testUser1 = {
-  _id: testUser1Id,
-  name: 'Test Name',
-  email: 'testemail@example.com',
-  password: 'testpassword123',
-  tokens: [
-    {
-      token: jwt.sign(
-        { _id: testUser1Id },
-        process.env.JWT_SECRET || 'd^e#f@a*u$l%t'
-      )
-    }
-  ]
-};
-
 beforeEach(async () => {
-  await UserCollection.deleteMany();
-  await new UserCollection(testUser1).save();
+  await dbSeed();
 });
 
 afterAll(async () => {
-  await mongoose.connection.db.dropDatabase();
-  await mongoose.connection.close();
+  await dbClose();
 });
 
 test('Should sign up a new user', async () => {
