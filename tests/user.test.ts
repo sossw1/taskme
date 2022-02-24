@@ -126,3 +126,20 @@ test('Should upload avatar image', async () => {
     expect(user.avatar).toEqual(expect.any(Buffer));
   }
 });
+
+test('Should update valid user field', async () => {
+  await request(app)
+    .patch('/api/v1/users/me')
+    .set('Authorization', `Bearer ${testUser1.tokens[0].token}`)
+    .send({
+      name: 'Modified'
+    })
+    .expect(200);
+
+  const user = await UserCollection.findById(testUser1._id);
+  expect(user).not.toBeNull();
+
+  if (user) {
+    expect(user.name).toBe('Modified');
+  }
+});
