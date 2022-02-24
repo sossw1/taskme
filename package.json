@@ -10,7 +10,7 @@
   "license": "MIT",
   "main": "build/index.js",
   "scripts": {
-    "test": "env-cmd -f ./config/test.env jest",
+    "test": "env-cmd -f ./config/test.env jest --runInBand --detectOpenHandles",
     "start": "node build/index.js",
     "dev": "env-cmd -f ./config/dev.env nodemon build/index.js",
     "postinstall": "tsc",
