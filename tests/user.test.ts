@@ -36,7 +36,7 @@ test('Should sign up a new user', async () => {
       token: user.tokens[0].token
     });
 
-    expect(user.password).not.toBe(testUser2.password);
+    expect(user.password).not.toEqual(testUser2.password);
   }
 });
 
@@ -52,7 +52,7 @@ test('Should log in existing user', async () => {
   const user = await UserCollection.findById(testUser1._id);
   expect(user).not.toBeNull();
   if (user) {
-    expect(user.tokens[1].token).toBe(response.body.token);
+    expect(user.tokens[1].token).toEqual(response.body.token);
   }
 });
 
@@ -120,7 +120,7 @@ test('Should update valid user field', async () => {
   expect(user).not.toBeNull();
 
   if (user) {
-    expect(user.name).toBe('Modified');
+    expect(user.name).toEqual('Modified');
   }
 });
 
