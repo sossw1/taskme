@@ -4,7 +4,7 @@ import { dbSeed, dbClose, user1, task1 } from './fixtures/db';
 
 import request from 'supertest';
 
-beforeAll(async () => {
+beforeEach(async () => {
   await dbSeed();
 });
 
