@@ -33,3 +33,13 @@ test('Should create task for user', async () => {
     expect(task.owner).toEqual(user1._id);
   }
 });
+
+test('Should get tasks belonging to user', async () => {
+  const response = await request(app)
+    .get('/api/v1/tasks')
+    .set('Authorization', `Bearer ${user1.tokens[0].token}`)
+    .send()
+    .expect(200);
+
+  expect(response.body).toHaveLength(2);
+});
