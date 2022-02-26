@@ -1,6 +1,6 @@
 import app from '../src/app';
 import TaskCollection from '../src/models/Task';
-import { dbSeed, dbClose, user1, task1 } from './fixtures/db';
+import { dbSeed, dbClose, users, tasks } from './fixtures/db';
 
 import request from 'supertest';
 
@@ -13,31 +13,31 @@ afterAll(async () => {
 });
 
 test('Should create task for user', async () => {
-  const task4 = {
-    description: 'Description 4',
+  const newTask = {
+    description: 'New Task',
     completed: false,
-    owner: user1
+    owner: users[0]
   };
 
   const response = await request(app)
     .post('/api/v1/tasks')
-    .set('Authorization', `Bearer ${user1.tokens[0].token}`)
-    .send(task4)
+    .set('Authorization', `Bearer ${users[0].tokens[0].token}`)
+    .send(newTask)
     .expect(201);
 
   const task = await TaskCollection.findById(response.body._id);
   expect(task).not.toBeNull();
   if (task) {
-    expect(task.description).toEqual(task4.description);
+    expect(task.description).toEqual(newTask.description);
     expect(task.completed).toEqual(false);
-    expect(task.owner).toEqual(user1._id);
+    expect(task.owner).toEqual(users[0]._id);
   }
 });
 
 test('Should get tasks belonging to user', async () => {
   const response = await request(app)
     .get('/api/v1/tasks')
-    .set('Authorization', `Bearer ${user1.tokens[0].token}`)
+    .set('Authorization', `Bearer ${users[0].tokens[0].token}`)
     .send()
     .expect(200);
 
