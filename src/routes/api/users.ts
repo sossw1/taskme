@@ -1,6 +1,7 @@
 import UserCollection, { IUser, IToken } from '../../models/User';
 import auth from '../../middleware/auth';
 import { sendWelcomeEmail, sendCancellationEmail } from '../../emails/account';
+import { apiVersion } from './version';
 
 import express, { NextFunction, Request, response, Response } from 'express';
 import multer from 'multer';
@@ -8,26 +9,33 @@ import sharp from 'sharp';
 
 const router = express.Router();
 
-router.get('/api/v1/users/me', auth, async (req: Request, res: Response) => {
-  res.send(req.user);
-});
-
-router.get('/api/v1/users/:id/avatar', async (req: Request, res: Response) => {
-  try {
-    const user = await UserCollection.findById(req.params.id);
-
-    if (!user || !user.avatar) {
-      throw new Error();
-    }
-
-    res.header('Content-Type', 'image/png');
-    res.send(user.avatar);
-  } catch (error) {
-    res.sendStatus(404);
+router.get(
+  `/api/${apiVersion}/users/me`,
+  auth,
+  async (req: Request, res: Response) => {
+    res.send(req.user);
   }
-});
+);
 
-router.post('/api/v1/users', async (req: Request, res: Response) => {
+router.get(
+  `/api/${apiVersion}/users/:id/avatar`,
+  async (req: Request, res: Response) => {
+    try {
+      const user = await UserCollection.findById(req.params.id);
+
+      if (!user || !user.avatar) {
+        throw new Error();
+      }
+
+      res.header('Content-Type', 'image/png');
+      res.send(user.avatar);
+    } catch (error) {
+      res.sendStatus(404);
+    }
+  }
+);
+
+router.post(`/api/${apiVersion}/users`, async (req: Request, res: Response) => {
   const {
     name,
     email,
@@ -82,21 +90,24 @@ router.post('/api/v1/users', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/api/v1/users/login', async (req: Request, res: Response) => {
-  try {
-    const { email, password }: { email: string; password: string } = req.body;
-    const user = await UserCollection.findByCredentials(email, password);
+router.post(
+  `/api/${apiVersion}/users/login`,
+  async (req: Request, res: Response) => {
+    try {
+      const { email, password }: { email: string; password: string } = req.body;
+      const user = await UserCollection.findByCredentials(email, password);
 
-    const token = await user.generateAuthToken();
+      const token = await user.generateAuthToken();
 
-    res.send({ user, token });
-  } catch (error) {
-    res.sendStatus(400);
+      res.send({ user, token });
+    } catch (error) {
+      res.sendStatus(400);
+    }
   }
-});
+);
 
 router.post(
-  '/api/v1/users/logout',
+  `/api/${apiVersion}/users/logout`,
   auth,
   async (req: Request, res: Response) => {
     try {
@@ -113,7 +124,7 @@ router.post(
 );
 
 router.post(
-  '/api/v1/users/logout/all',
+  `/api/${apiVersion}/users/logout/all`,
   auth,
   async (req: Request, res: Response) => {
     try {
@@ -140,7 +151,7 @@ const upload = multer({
 });
 
 router.post(
-  '/api/v1/users/me/avatar',
+  `/api/${apiVersion}/users/me/avatar`,
   auth,
   upload.single('avatar'),
   async (req: Request, res: Response) => {
@@ -161,81 +172,89 @@ router.post(
   }
 );
 
-router.patch('/api/v1/users/me', auth, async (req: Request, res: Response) => {
-  try {
-    const user = req.user;
+router.patch(
+  `/api/${apiVersion}/users/me`,
+  auth,
+  async (req: Request, res: Response) => {
+    try {
+      const user = req.user;
 
-    const updates = Object.keys(req.body);
-    const allowedUpdates = ['name', 'email', 'password', 'age'];
-    const isValidOperation = updates.every((update) =>
-      allowedUpdates.includes(update)
-    );
+      const updates = Object.keys(req.body);
+      const allowedUpdates = ['name', 'email', 'password', 'age'];
+      const isValidOperation = updates.every((update) =>
+        allowedUpdates.includes(update)
+      );
 
-    if (!isValidOperation) {
-      return res.status(400).send({ error: 'Invalid updates' });
-    }
-
-    const { name, email, password, age } = req.body;
-
-    if (name || name === '') {
-      user.name = name;
-    }
-
-    if (email || email === '') {
-      user.email = email;
-    }
-    if (password || password === '') {
-      user.password = password;
-    }
-    if (age) {
-      user.age = age;
-    }
-
-    await user.save();
-
-    res.send(user);
-  } catch (error: any) {
-    if (error.name === 'CastError') {
-      return res.status(400).send({ error: 'Invalid user ID' });
-    }
-    if (error.name === 'ValidationError') {
-      let errorMessage = 'Invalid user data provided - ';
-      const { errors } = error;
-
-      if (errors.name) {
-        errorMessage += errors.name.message;
-      } else if (errors.email) {
-        errorMessage += errors.email.message;
-      } else if (errors.password) {
-        errorMessage += errors.password.message;
-      } else if (errors.age) {
-        errorMessage += errors.age.message;
-      } else {
-        errorMessage = errorMessage.slice(0, -3);
+      if (!isValidOperation) {
+        return res.status(400).send({ error: 'Invalid updates' });
       }
 
-      return res.status(400).send({ error: errorMessage });
-    }
-    res.sendStatus(500);
-  }
-});
+      const { name, email, password, age } = req.body;
 
-router.delete('/api/v1/users/me', auth, async (req: Request, res: Response) => {
-  try {
-    await req.user.remove();
-    sendCancellationEmail(req.user.name, req.user.email);
-    res.send(req.user);
-  } catch (error: any) {
-    if (error.name === 'CastError') {
-      return res.status(400).send({ error: 'Invalid user ID' });
-    }
+      if (name || name === '') {
+        user.name = name;
+      }
 
-    res.sendStatus(500);
+      if (email || email === '') {
+        user.email = email;
+      }
+      if (password || password === '') {
+        user.password = password;
+      }
+      if (age) {
+        user.age = age;
+      }
+
+      await user.save();
+
+      res.send(user);
+    } catch (error: any) {
+      if (error.name === 'CastError') {
+        return res.status(400).send({ error: 'Invalid user ID' });
+      }
+      if (error.name === 'ValidationError') {
+        let errorMessage = 'Invalid user data provided - ';
+        const { errors } = error;
+
+        if (errors.name) {
+          errorMessage += errors.name.message;
+        } else if (errors.email) {
+          errorMessage += errors.email.message;
+        } else if (errors.password) {
+          errorMessage += errors.password.message;
+        } else if (errors.age) {
+          errorMessage += errors.age.message;
+        } else {
+          errorMessage = errorMessage.slice(0, -3);
+        }
+
+        return res.status(400).send({ error: errorMessage });
+      }
+      res.sendStatus(500);
+    }
   }
-});
+);
 
 router.delete(
-  '/api/v1/users/me/avatar',
+  `/api/${apiVersion}/users/me`,
+  auth,
+  async (req: Request, res: Response) => {
+    try {
+      await req.user.remove();
+      sendCancellationEmail(req.user.name, req.user.email);
+      res.send(req.user);
+    } catch (error: any) {
+      if (error.name === 'CastError') {
+        return res.status(400).send({ error: 'Invalid user ID' });
+      }
+
+      res.sendStatus(500);
+    }
+  }
+);
+
+router.delete(
+  `/api/${apiVersion}/users/me/avatar`,
   auth,
   async (req: Request, res: Response) => {
     try {

@@ -1,6 +1,7 @@
 import app from '../src/app';
 import TaskCollection from '../src/models/Task';
 import { dbSeed, dbClose, users, tasks } from './fixtures/db';
+import { apiVersion } from '../src/routes/api/version';
 
 import request from 'supertest';
 
@@ -20,7 +21,7 @@ test('Should create task for user', async () => {
   };
 
   const response = await request(app)
-    .post('/api/v1/tasks')
+    .post(`/api/${apiVersion}/tasks`)
     .set('Authorization', `Bearer ${users[0].tokens[0].token}`)
     .send(newTask)
     .expect(201);
@@ -36,7 +37,7 @@ test('Should create task for user', async () => {
 
 test('Should get tasks belonging to user', async () => {
   const response = await request(app)
-    .get('/api/v1/tasks')
+    .get(`/api/${apiVersion}/tasks`)
     .set('Authorization', `Bearer ${users[0].tokens[0].token}`)
     .send()
     .expect(200);

@@ -1,6 +1,7 @@
 import app from '../src/app';
 import UserCollection from '../src/models/User';
 import { users, dbSeed, dbClose } from './fixtures/db';
+import { apiVersion } from '../src/routes/api/version';
 
 import request from 'supertest';
 
@@ -20,7 +21,7 @@ test('Should sign up a new user', async () => {
   };
 
   const response = await request(app)
-    .post('/api/v1/users')
+    .post(`/api/${apiVersion}/users`)
     .send(newUser)
     .expect(201);
 
@@ -42,7 +43,7 @@ test('Should sign up a new user', async () => {
 
 test('Should log in existing user', async () => {
   const response = await request(app)
-    .post('/api/v1/users/login')
+    .post(`/api/${apiVersion}/users/login`)
     .send({
       email: users[1].email,
       password: users[1].password
@@ -58,7 +59,7 @@ test('Should log in existing user', async () => {
 
 test('Should not log in nonexistent user', async () => {
   await request(app)
-    .post('/api/v1/users/login')
+    .post(`/api/${apiVersion}/users/login`)
     .send({
       email: users[1].email,
       password: 'wrongpassword'
@@ -68,19 +69,19 @@ test('Should not log in nonexistent user', async () => {
 
 test('Should get profile for user', async () => {
   await request(app)
-    .get('/api/v1/users/me')
+    .get(`/api/${apiVersion}/users/me`)
     .set('Authorization', `Bearer ${users[1].tokens[0].token}`)
     .send()
     .expect(200);
 });
 
 test('Should not get profile for unauthenticated user', async () => {
-  await request(app).get('/api/v1/users/me').send().expect(401);
+  await request(app).get(`/api/${apiVersion}/users/me`).send().expect(401);
 });
 
 test('Should delete account for user', async () => {
   await request(app)
-    .delete('/api/v1/users/me')
+    .delete(`/api/${apiVersion}/users/me`)
     .set('Authorization', `Bearer ${users[1].tokens[0].token}`)
     .send()
     .expect(200);
@@ -90,12 +91,12 @@ test('Should delete account for user', async () => {
 });
 
 test('Should not delete account for unauthenticated user', async () => {
-  await request(app).delete('/api/v1/users/me').send().expect(401);
+  await request(app).delete(`/api/${apiVersion}/users/me`).send().expect(401);
 });
 
 test('Should upload avatar image', async () => {
   await request(app)
-    .post('/api/v1/users/me/avatar')
+    .post(`/api/${apiVersion}/users/me/avatar`)
     .set('Authorization', `Bearer ${users[1].tokens[0].token}`)
     .attach('avatar', 'tests/fixtures/profile-pic.jpg')
     .expect(200);
@@ -109,7 +110,7 @@ test('Should upload avatar image', async () => {
 
 test('Should update valid user field', async () => {
   await request(app)
-    .patch('/api/v1/users/me')
+    .patch(`/api/${apiVersion}/users/me`)
     .set('Authorization', `Bearer ${users[1].tokens[0].token}`)
     .send({
       name: 'Modified'
@@ -126,7 +127,7 @@ test('Should update valid user field', async () => {
 
 test('Should not update invalid user field', async () => {
   await request(app)
-    .patch('/api/v1/users/me')
+    .patch(`/api/${apiVersion}/users/me`)
     .set('Authorization', `Bearer ${users[1].tokens[0].token}`)
     .send({
       location: 'London'
