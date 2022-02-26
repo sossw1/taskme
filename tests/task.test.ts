@@ -48,3 +48,12 @@ test('Should get tasks belonging to user', async () => {
 
   expect(response.body).toHaveLength(user0Tasks.length);
 });
+
+test('Should not delete task belonging to other user', async () => {
+  const taskId = tasks[0]._id;
+  await request(app)
+    .delete(`/api/${apiVersion}/tasks/${taskId}`)
+    .set('Authorization', `Bearer ${users[1].tokens[0].token}`)
+    .send()
+    .expect(404);
+});
