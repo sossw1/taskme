@@ -6,6 +6,9 @@ import jwt from 'jsonwebtoken';
 
 const user1Id = new mongoose.Types.ObjectId();
 const user2Id = new mongoose.Types.ObjectId();
+const task0Id = new mongoose.Types.ObjectId();
+const task1Id = new mongoose.Types.ObjectId();
+const task2Id = new mongoose.Types.ObjectId();
 
 export const users = [
   {
@@ -40,16 +43,19 @@ export const users = [
 
 export const tasks = [
   {
+    _id: task0Id,
     description: 'Description 1',
     completed: false,
     owner: user1Id
   },
   {
+    _id: task1Id,
     description: 'Description 2',
     completed: true,
     owner: user1Id
   },
   {
+    _id: task2Id,
     description: 'Description 3',
     completed: true,
     owner: user2Id
