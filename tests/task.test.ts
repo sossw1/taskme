@@ -41,5 +41,9 @@ test('Should get tasks belonging to user', async () => {
     .send()
     .expect(200);
 
-  expect(response.body).toHaveLength(2);
+  const user0Tasks = tasks.filter((task) => {
+    return task.owner === users[0]._id;
+  });
+
+  expect(response.body).toHaveLength(user0Tasks.length);
 });
