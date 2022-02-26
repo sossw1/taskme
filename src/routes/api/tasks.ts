@@ -15,7 +15,6 @@ router.get(
   `/api/${apiVersion}/tasks`,
   auth,
   async (req: Request, res: Response) => {
-    console.log(apiVersion);
     const match: any = {};
 
     if (req.query.completed) {
